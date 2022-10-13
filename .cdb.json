@@ -1,0 +1,5 @@
+{
+    "type": "MOD",
+    "title": "modinfo",
+    "short_description": "get info about the mods running on a server"
+}
