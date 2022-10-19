@@ -45,7 +45,6 @@ local function get_modpack(modname)
 	local pathparts = path_split(modpath)
 	pathparts[#pathparts] = "modpack.conf"
 	local conf_path = path_concat(unpack(pathparts))
-	modinfo.log("action", "get_modpack: looking @ %s", conf_path)
 	if file_exists(conf_path) then
 		local settings = InsecureSettings(conf_path)
 		return
@@ -94,9 +93,6 @@ for _, modname in ipairs(get_modnames()) do
 end
 
 table.sort(elements, string.lc_cmp)
-
-modinfo.log("warning", dump(elements))
-modinfo.log("warning", dump(modpacks))
 
 modinfo.elements = elements
 modinfo.modpacks = modpacks
