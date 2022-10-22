@@ -92,7 +92,7 @@ for _, modname in ipairs(get_modnames()) do
 	end
 end
 
-table.sort(elements, string.lc_cmp)
+table.sort(elements, futil.string.lc_cmp)
 
 modinfo.elements = elements
 modinfo.modpacks = modpacks

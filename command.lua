@@ -5,6 +5,8 @@ local FS = function(...)
 end
 local f = string.format
 
+local pairs_by_key = futil.table.pairs_by_key
+
 local function show_mods_formspec(name, row)
 	row = tonumber(row) or 0
 	local selected_mod
@@ -34,7 +36,7 @@ local function show_mods_formspec(name, row)
 
 	local info = {}
 	if row > 0 then
-		for k, v in table.pairs_by_key(modinfo.mod_info[selected_mod] or {}) do
+		for k, v in pairs_by_key(modinfo.mod_info[selected_mod] or {}) do
 			table.insert(info, f("%s,%s", F(tostring(k)), F(tostring(v))))
 		end
 	end
