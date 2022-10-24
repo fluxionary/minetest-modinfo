@@ -3,6 +3,11 @@ local modpath = minetest.get_modpath(modname)
 local S = minetest.get_translator(modname)
 local f = string.format
 
+assert(
+	type(futil.version) == "number" and futil.version >= os.time({year = 2022, month = 10, day = 24}),
+	"please update futil"
+)
+
 local ie = minetest.request_insecure_environment()
 if not ie then
 	error(table.concat({
@@ -14,7 +19,7 @@ end
 modinfo = {
 	author = "flux",
 	license = "AGPL_v3",
-	version = {year = 2022, month = 10, day = 12},
+	version = os.time({year = 2022, month = 10, day = 12}),
 	fork = "flux",
 
 	modname = modname,
