@@ -8,6 +8,13 @@ local f = string.format
 local pairs_by_key = futil.table.pairs_by_key
 
 local function show_mods_formspec(name, row)
+	local fs_parts = {
+		"size[13,7.5]",
+		f("label[0,-0.1;%s]", FS("mods")),
+		"button_exit[12.5,-0.15;0.5,0.5;quit;X]",
+		"box[0,5.5;12.8,1.5;#000]",
+	}
+
 	row = tonumber(row) or 0
 	local selected_mod
 	local rows = {f("#FFF,0,%s,%s", F(S("mod")), F(S("description")))}
@@ -37,20 +44,24 @@ local function show_mods_formspec(name, row)
 	local info = {}
 	if row > 0 then
 		for k, v in pairs_by_key(modinfo.mod_info[selected_mod] or {}) do
-			table.insert(info, f("%s,%s", F(tostring(k)), F(tostring(v))))
+			if k == "url" then
+				table.insert_all(fs_parts, {
+					f("textarea[0.3,5;12.7,0.5;;;URL: %s]", F(v)),
+					"tooltip[0.3,5;12.7,0.5;select and copy;#000;#FFF]"
+				})
+
+			else
+				table.insert(info, f("%s,%s", F(tostring(k)), F(tostring(v))))
+			end
 		end
 	end
 
-	local fs_parts = {
-		"size[13,7.5]",
-		f("label[0,-0.1;%s]", FS("mods")),
-		"button_exit[12.5,-0.15;0.5,0.5;quit;X]",
+	table.insert_all(fs_parts, {
 		"tablecolumns[color;tree;text;text]",
-		f("table[0,0.5;12.8,4.8;list;%s;%i]", table.concat(rows, ","), row),
-		"box[0,5.5;12.8,1.5;#000]",
+		f("table[0,0.5;12.8,4.3;list;%s;%i]", table.concat(rows, ","), row),
 		"tablecolumns[text;text]",
 		f("table[0,5.5;12.8,1.9;info;%s;0]", table.concat(info, ",")),
-	}
+	})
 
 	minetest.show_formspec(name, "modinfo:modinfo", table.concat(fs_parts, ""))
 end
