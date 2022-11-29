@@ -1,6 +1,6 @@
-
-local ie = modinfo.ie
-local InsecureSettings = modinfo.InsecureSettings
+local private_state = ...
+local ie = private_state.ie
+local InsecureSettings = private_state.InsecureSettings
 
 local get_modnames = minetest.get_modnames
 local get_modpath = minetest.get_modpath
@@ -86,7 +86,6 @@ for _, modname in ipairs(get_modnames()) do
 
 		table.insert(modpack_mods, modname)
 		modpacks[modpack_name] = modpack_mods
-
 	else
 		table.insert(elements, modname)
 	end
@@ -117,7 +116,6 @@ for modname in pairs(mod_descriptions) do
 			info[k] = nil
 		end
 		mod_info[modname] = info
-
 	else
 		mod_info[modname] = {}
 	end
@@ -136,7 +134,6 @@ minetest.register_on_mods_loaded(function()
 					info.version = info.version or mod.information.version
 					info.description = info.description or mod.information.additional
 					info.url = info.url or mod.information.source
-
 				else
 					info.author = info.author or mod.author
 					info.version = info.version or mod.version

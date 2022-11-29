@@ -1,4 +1,5 @@
-local ie = modinfo.ie
+local private_state = ...
+local ie = private_state.ie
 
 local InsecureSettings = futil.class1()
 
@@ -19,11 +20,9 @@ local function parse(fh, filepath)
 				multikey = nil
 				multiline = nil
 				state = "normal"
-
 			else
 				table.insert(multiline, line)
 			end
-
 		elseif state == "multiline" then
 			if line:sub(-3) == '"""' then
 				table.insert(multiline, line:sub(1, -4))
@@ -32,11 +31,9 @@ local function parse(fh, filepath)
 				multiline = nil
 				state = "normal"
 			end
-
 		elseif state == "normal" then
 			if #line == 0 or line:sub(1, 1) == "#" then
 				futil.functional.noop()
-
 			else
 				local key, value = line:match("^([^=]+)=(.*)$")
 				if not (key and value) then
@@ -53,13 +50,11 @@ local function parse(fh, filepath)
 				if value:sub(1, 1) == "{" and value:sub(-1) ~= "}" then
 					state = "group"
 					multikey = key
-					multiline = {value}
-
+					multiline = { value }
 				elseif value:sub(1, 3) == '"""' and (value:sub(-3) ~= '"""' or #value < 6) then
 					state = "multiline"
 					multikey = key
-					multiline = {value:sub(4)}
-
+					multiline = { value:sub(4) }
 				else
 					values[key] = value
 				end
@@ -89,7 +84,6 @@ function InsecureSettings:get_bool(key, default)
 	local value = self._values[key]
 	if key == nil then
 		return default
-
 	else
 		return value:lower() == "true"
 	end
@@ -127,4 +121,4 @@ function InsecureSettings:write()
 	error("can't set values for insecure settings (not ours)")
 end
 
-modinfo.InsecureSettings = InsecureSettings
+private_state.InsecureSettings = InsecureSettings

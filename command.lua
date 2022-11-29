@@ -1,8 +1,6 @@
 local S = modinfo.S
 local F = minetest.formspec_escape
-local FS = function(...)
-	return F(S(...))
-end
+local FS = modinfo.FS
 local f = string.format
 
 local pairs_by_key = futil.table.pairs_by_key
@@ -17,7 +15,7 @@ local function show_mods_formspec(name, row)
 
 	row = tonumber(row) or 0
 	local selected_mod
-	local rows = {f("#FFF,0,%s,%s", F(S("mod")), F(S("description")))}
+	local rows = { f("#FFF,0,%s,%s", F(S("mod")), F(S("description"))) }
 
 	local i = 1
 	for _, element in ipairs(modinfo.elements) do
@@ -35,7 +33,6 @@ local function show_mods_formspec(name, row)
 				end
 				table.insert(rows, f("#7AF,1,  %s,%s", F(modname), F(modinfo.mod_descriptions[modname])))
 			end
-
 		else
 			table.insert(rows, f("#7AF,0,%s,%s", F(element), F(modinfo.mod_descriptions[element])))
 		end
@@ -47,9 +44,8 @@ local function show_mods_formspec(name, row)
 			if k == "url" then
 				table.insert_all(fs_parts, {
 					f("textarea[0.3,5;12.7,0.5;;;URL: %s]", F(v)),
-					"tooltip[0.3,5;12.7,0.5;select and copy;#000;#FFF]"
+					"tooltip[0.3,5;12.7,0.5;select and copy;#000;#FFF]",
 				})
-
 			else
 				table.insert(info, f("%s,%s", F(tostring(k)), F(tostring(v))))
 			end
