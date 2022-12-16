@@ -32,9 +32,7 @@ local function parse(fh, filepath)
 				state = "normal"
 			end
 		elseif state == "normal" then
-			if #line == 0 or line:sub(1, 1) == "#" then
-				futil.functional.noop()
-			else
+			if #line > 0 and line:sub(1, 1) ~= "#" then
 				local key, value = line:match("^([^=]+)=(.*)$")
 				if not (key and value) then
 					error(("invalid conf file %q line %i"):format(filepath, linenum))
