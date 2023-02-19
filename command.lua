@@ -41,7 +41,7 @@ local function show_mods_formspec(name, row)
 	local info = {}
 	if row > 0 then
 		for k, v in pairs_by_key(modinfo.mod_info[selected_mod] or {}) do
-			if k == "url" then
+			if k == "url" or k == "website" then
 				table.insert_all(fs_parts, {
 					f("textarea[0.3,5;12.7,0.5;;;URL: %s]", F(v)),
 					"tooltip[0.3,5;12.7,0.5;select and copy;#000;#FFF]",

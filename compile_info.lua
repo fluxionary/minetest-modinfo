@@ -47,8 +47,7 @@ local function get_modpack(modname)
 	local conf_path = path_concat(unpack(pathparts))
 	if file_exists(conf_path) then
 		local settings = InsecureSettings(conf_path)
-		return
-			(settings:get("title") or settings:get("name") or pathparts[#pathparts - 1]),
+		return (settings:get("title") or settings:get("name") or pathparts[#pathparts - 1]),
 			(settings:get("description") or "")
 	end
 
@@ -133,7 +132,7 @@ minetest.register_on_mods_loaded(function()
 					info.author = info.author or mod.information.author
 					info.version = info.version or mod.information.version
 					info.description = info.description or mod.information.additional
-					info.url = info.url or mod.information.source
+					info.website = info.website or info.url or mod.information.source
 				else
 					info.author = info.author or mod.author
 					info.version = info.version or mod.version
