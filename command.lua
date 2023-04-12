@@ -67,6 +67,13 @@ minetest.register_chatcommand("modinfo", {
 	func = show_mods_formspec,
 })
 
+if modinfo.settings.override_mods_command then
+	minetest.override_chatcommand("mods", {
+		description = "get info about mods",
+		func = show_mods_formspec,
+	})
+end
+
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "modinfo:modinfo" or fields.quit then
 		return

@@ -1,0 +1,2 @@
+# if true, then the buildint /mods command will show modinfo instead
+modinfo.override_mods_command (override builtin mods command) bool false
