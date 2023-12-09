@@ -1,28 +1,15 @@
-local private_state = ...
-local ie = private_state.ie
-local InsecureSettings = private_state.InsecureSettings
-
 local get_modnames = minetest.get_modnames
 local get_modpath = minetest.get_modpath
 
+local file_exists = futil.file_exists
 local path_concat = futil.path_concat
 local path_split = futil.path_split
-
-local function file_exists(path)
-	local fh = ie.io.open(path, "r")
-	if fh then
-		fh:close()
-		return true
-	else
-		return false
-	end
-end
 
 local function get_mod_description(modname)
 	local modpath = get_modpath(modname)
 	local conf_path = path_concat(modpath, "mod.conf")
 	if file_exists(conf_path) then
-		local settings = InsecureSettings(conf_path)
+		local settings = Settings(conf_path)
 		local description = settings:get("description")
 		if not description then
 			return ""
@@ -32,7 +19,7 @@ local function get_mod_description(modname)
 	end
 	conf_path = path_concat(modpath, "description.txt")
 	if file_exists(conf_path) then
-		local fh = ie.io.open(conf_path, "r")
+		local fh = io.open(conf_path, "r")
 		local description = fh:lines()():trim()
 		fh:close()
 		return description
@@ -43,42 +30,24 @@ end
 local function get_modpack(modname)
 	local modpath = get_modpath(modname)
 	local pathparts = path_split(modpath)
-	pathparts[#pathparts] = "modpack.conf"
-	local conf_path = path_concat(unpack(pathparts))
-	if file_exists(conf_path) then
-		local settings = InsecureSettings(conf_path)
-		return (settings:get("title") or settings:get("name") or pathparts[#pathparts - 1]),
-			(settings:get("description") or "")
-	end
-
-	pathparts[#pathparts] = "modpack.txt"
-	conf_path = path_concat(unpack(pathparts))
-	if file_exists(conf_path) then
-		local description = ""
-		pathparts[#pathparts] = "description.txt"
-		local fh = ie.io.open(path_concat(unpack(pathparts)))
-		if fh then
-			description = fh:lines()():trim()
-			fh:close()
-		end
-		return pathparts[#pathparts - 1], description
+	local modpack_name = pathparts[#pathparts - 1]
+	if modpack_name ~= "worldmods" and modpack_name ~= "mods" then
+		return modpack_name
 	end
 end
 
 local elements = {}
 local modpacks = {}
 local mod_descriptions = {}
-local modpack_descriptions = {}
 
 for _, modname in ipairs(get_modnames()) do
 	mod_descriptions[modname] = get_mod_description(modname) or ""
-	local modpack_name, modpack_description = get_modpack(modname)
+	local modpack_name = get_modpack(modname)
 
 	if modpack_name then
 		local modpack_mods = modpacks[modpack_name]
 
 		if not modpack_mods then
-			modpack_descriptions[modpack_name] = modpack_description
 			table.insert(elements, modpack_name)
 			modpack_mods = {}
 		end
@@ -95,7 +64,6 @@ table.sort(elements, futil.string.lc_cmp)
 modinfo.elements = elements
 modinfo.modpacks = modpacks
 modinfo.mod_descriptions = mod_descriptions
-modinfo.modpack_descriptions = modpack_descriptions
 
 local mod_info = {}
 local keys_to_ignore = {
@@ -110,7 +78,7 @@ local keys_to_ignore = {
 for modname in pairs(mod_descriptions) do
 	local conf_path = path_concat(get_modpath(modname), "mod.conf")
 	if file_exists(conf_path) then
-		local info = InsecureSettings(conf_path):to_table()
+		local info = Settings(conf_path):to_table()
 		for _, k in ipairs(keys_to_ignore) do
 			info[k] = nil
 		end

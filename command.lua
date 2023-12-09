@@ -25,7 +25,7 @@ local function show_mods_formspec(name, row)
 		end
 		local modpack_mods = modinfo.modpacks[element]
 		if modpack_mods then
-			table.insert(rows, f("#7F7,0,%s,%s", F(element), F(modinfo.modpack_descriptions[element])))
+			table.insert(rows, f("#7F7,0,%s,%s", F(element), F("")))
 			for _, modname in ipairs(modpack_mods) do
 				i = i + 1
 				if i == row then
